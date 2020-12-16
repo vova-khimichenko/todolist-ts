@@ -10,7 +10,7 @@ type ResponseType<D> = {
 }
 
 export default {
-    title: 'API'
+    title: 'todolistAPI'
 }
 
 export const GetTodolists = () => {
@@ -54,7 +54,7 @@ export const DeleteTodolist = () => {
 export const UpdateTodolistTitle = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        const todolistId = '8aef8a87-3939-40d4-88de-74ec328c8921'
+        const todolistId = 'be773858-e8b3-4c7a-a5f8-4d71a5e47a91'
         todolistAPI.updateTodolist(todolistId, 'SOME NEW TITLE')
             .then((res: AxiosResponse<ResponseType<{}>>) => {
                 setState(res.data)
