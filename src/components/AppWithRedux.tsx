@@ -7,13 +7,12 @@ import {MenuOpen} from "@material-ui/icons";
 import {
     AddTodolistAC,
     ChangeTodolistFilterAC,
-    ChangeTodolistTitleAC, fetchTodolistsThunk,
-    RemoveTodolistAC, setTodolistsAC,
+    ChangeTodolistTitleAC, fetchTodolistsThunkTC,
+    RemoveTodolistAC
 } from "../state/todolists-reducer";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../state/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
-import {todolistAPI} from "../api/todolist-api";
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
 export type TodolistType = {
@@ -70,7 +69,7 @@ function AppWithRedux() {
     const dispatch = useDispatch()
     // })
     useEffect(() => {
-        dispatch(fetchTodolistsThunk)
+        dispatch(fetchTodolistsThunkTC())
     }, [])
 
     const addTodolist = useCallback((title: string) => {
