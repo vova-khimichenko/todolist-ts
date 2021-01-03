@@ -26,7 +26,7 @@ export const todolistAPI = {
     postTodolist(title: string) {
         return instance.post('', {title: title})
     },
-    getTodolist() {
+    getTodolists() {
         return instance.get<Array<TodolistType>>('')
     },
 

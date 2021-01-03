@@ -16,7 +16,7 @@ export default {
 export const GetTodolists = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        todolistAPI.getTodolist()
+        todolistAPI.getTodolists()
             .then((res: AxiosResponse<Array<TodolistType>>) => {
                 setState(res.data);
             })
@@ -41,7 +41,7 @@ export const CreateTodolist = () => {
 export const DeleteTodolist = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        const todolistId = 'be773858-e8b3-4c7a-a5f8-4d71a5e47a91'
+        const todolistId = 'e8066f16-7948-44ff-a671-ca4123a3dde4'
         todolistAPI.deleteTodolist(todolistId)
             .then((res: AxiosResponse<ResponseType<{}>>) => {
                 setState(res.data);
