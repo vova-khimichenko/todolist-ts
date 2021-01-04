@@ -1,7 +1,15 @@
 import {TaskStateType} from '../components/App';
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from "./todolists-reducer";
 import {v1} from "uuid";
+import {TaskType} from "../components/Todolist";
+import {Dispatch} from "redux";
+import {taskAPI} from "../api/task-api";
 
+export type SetTasksActionType = {
+    type: 'SET-TASKS'
+    tasks: Array<TaskType>
+    todolistId: string
+}
 type RemoveTaskActionType = {
     type: 'REMOVE-TASK',
     taskId: string
@@ -25,18 +33,19 @@ type ChangeTaskTitleActionType = {
     todolistId: string
 }
 type ActionType =
-    SetTodolistsActionType
-    | RemoveTaskActionType
-    | AddTaskActionType
-    | ChangeTaskStatusActionType
-    | ChangeTaskTitleActionType
-    | AddTodolistActionType
-    | RemoveTodolistActionType
+    SetTasksActionType | SetTodolistsActionType | RemoveTaskActionType
+    | AddTaskActionType | ChangeTaskStatusActionType | ChangeTaskTitleActionType
+    | AddTodolistActionType | RemoveTodolistActionType
 
 const initialState: TaskStateType = {}
 
 export const tasksReducer = (state: TaskStateType = initialState, action: ActionType) => {
     switch (action.type) {
+        case 'SET-TASKS': {
+            const stateCopy = {...state}
+            stateCopy[action.todolistId] = action.tasks
+            return stateCopy
+        }
         case 'REMOVE-TASK':
             return {
                 ...state,
@@ -96,6 +105,9 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             return state
     }
 }
+export const setTasksAC = (tasks: Array<TaskType>, todolistId: string): SetTasksActionType => {
+    return {type: 'SET-TASKS', tasks, todolistId}
+}
 export const removeTaskAC = (taskId: string, todolistId: string): RemoveTaskActionType => {
     return {type: 'REMOVE-TASK', taskId: taskId, todolistId: todolistId}
 }
@@ -107,4 +119,14 @@ export const changeTaskTitleAC = (taskId: string, title: string, todolistId: str
 }
 export const changeTaskStatusAC = (taskId: string, isDone: boolean, todolistId: string): ChangeTaskStatusActionType => {
     return {type: 'CHANGE-TASK-STATUS', taskId: taskId, isDone: isDone, todolistId: todolistId}
+}
+export const fetchTasksTC = (todolistId: string) => {
+    return (dispatch: Dispatch) => {
+        taskAPI.getTasks(todolistId, 5, 5)
+            .then((res) => {
+                const tasks = res.data.items
+                const action = setTasksAC(tasks, todolistId)
+                dispatch(action)
+            })
+    }
 }

@@ -34,7 +34,7 @@ export const GetTasks = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
         const todolistId = 'fab7bdc5-f9f5-40c5-aaa8-0a369fe6a05d'
-        taskAPI.getTask(todolistId, 30, 1)
+        taskAPI.getTasks(todolistId, 30, 1)
             .then((res: AxiosResponse<ResponseType>) => {
                 setState(res.data);
             })

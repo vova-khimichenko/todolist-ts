@@ -10,7 +10,7 @@ const instance = axios.create({
 
 
 export const taskAPI = {
-    getTask(todolistId: string, pageSize: number, pageNumber: number) {
+    getTasks(todolistId: string, pageSize: number, pageNumber: number) {
         return instance.get(`${todolistId}/tasks?count=${pageSize}&page=${pageNumber}`)
     },
     postTask(todolistId: string, title: string) {
