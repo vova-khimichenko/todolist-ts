@@ -108,6 +108,17 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
 export const setTasksAC = (tasks: Array<TaskType>, todolistId: string): SetTasksActionType => {
     return {type: 'SET-TASKS', tasks, todolistId}
 }
+export const fetchTasksTC = (todolistId: string) => {
+    return (dispatch: Dispatch) => {
+        taskAPI.getTasks(todolistId, 30, 1)
+            .then((res) => {
+                console.log(res.data.items)
+                const tasks = res.data.items
+                const action = setTasksAC(tasks, todolistId)
+                dispatch(action)
+            })
+    }
+}
 export const removeTaskAC = (taskId: string, todolistId: string): RemoveTaskActionType => {
     return {type: 'REMOVE-TASK', taskId: taskId, todolistId: todolistId}
 }
@@ -119,14 +130,4 @@ export const changeTaskTitleAC = (taskId: string, title: string, todolistId: str
 }
 export const changeTaskStatusAC = (taskId: string, isDone: boolean, todolistId: string): ChangeTaskStatusActionType => {
     return {type: 'CHANGE-TASK-STATUS', taskId: taskId, isDone: isDone, todolistId: todolistId}
-}
-export const fetchTasksTC = (todolistId: string) => {
-    return (dispatch: Dispatch) => {
-        taskAPI.getTasks(todolistId, 5, 5)
-            .then((res) => {
-                const tasks = res.data.items
-                const action = setTasksAC(tasks, todolistId)
-                dispatch(action)
-            })
-    }
 }

@@ -33,7 +33,7 @@ export default {
 export const GetTasks = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        const todolistId = 'fab7bdc5-f9f5-40c5-aaa8-0a369fe6a05d'
+        const todolistId = 'e01e2049-c737-43ff-83c1-01d4e81667a4'
         taskAPI.getTasks(todolistId, 30, 1)
             .then((res: AxiosResponse<ResponseType>) => {
                 setState(res.data);
@@ -46,7 +46,7 @@ export const GetTasks = () => {
 export const CreateTask = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        const todolistId = 'fab7bdc5-f9f5-40c5-aaa8-0a369fe6a05d'
+        const todolistId = 'e01e2049-c737-43ff-83c1-01d4e81667a4'
         const taskTitle = 'Plans'
         taskAPI.postTask(todolistId, taskTitle)
             .then((res: AxiosResponse<CUDResponseType<{ item: TaskType }>>) => {

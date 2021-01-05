@@ -30,7 +30,6 @@ export type PropsType = {
 }
 
 export const Todolist = React.memo(function (props: PropsType) {
-        // console.log("Todolist called")
         const dispatch = useDispatch()
         useEffect(() => {
             dispatch(fetchTasksTC(props.id))
