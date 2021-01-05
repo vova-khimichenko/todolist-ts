@@ -19,7 +19,7 @@ type ResponseType = {
     totalCount: number
     error: string
 }
-type CUDResponseType<D> = {
+export type CUDResponseType<D> = {
     data: D
     messages: Array<any>
     fieldsErrors: Array<any>

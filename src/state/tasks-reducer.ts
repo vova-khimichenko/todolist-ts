@@ -112,7 +112,6 @@ export const fetchTasksTC = (todolistId: string) => {
     return (dispatch: Dispatch) => {
         taskAPI.getTasks(todolistId, 30, 1)
             .then((res) => {
-                console.log(res.data.items)
                 const tasks = res.data.items
                 const action = setTasksAC(tasks, todolistId)
                 dispatch(action)
