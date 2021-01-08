@@ -6,7 +6,7 @@ export type TaskType = {
     id: string
     title: string
     description: string
-    todolistId: string
+    todoListId: string
     order: number
     status: number
     priority: number
@@ -50,7 +50,7 @@ export const CreateTask = () => {
         const taskTitle = 'Plans'
         taskAPI.postTask(todolistId, taskTitle)
             .then((res: AxiosResponse<CUDResponseType<{ item: TaskType }>>) => {
-                // debugger
+                debugger
                 setState(res.data);
             })
     }, [])
