@@ -77,7 +77,7 @@ export const UpdateTaskTitle = () => {
     useEffect(() => {
         const todolistId = 'fab7bdc5-f9f5-40c5-aaa8-0a369fe6a05d'
         const taskId = '87c35499-1658-46a7-a7c0-801facaecd5f'
-        taskAPI.updateTask(todolistId, taskId, 'Contract')
+        taskAPI.updateTask(todolistId, taskId, {status})
             .then((res: AxiosResponse<CUDResponseType<{ item: TaskType }>>) => {
                 setState(res.data)
             })

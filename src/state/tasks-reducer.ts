@@ -3,6 +3,7 @@ import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType}
 import {TaskType} from "../stories/tasks-api.stories";
 import {Dispatch} from "redux";
 import {taskAPI} from "../api/task-api";
+import {AppRootStateType} from "./store";
 
 export type SetTasksActionType = {
     type: 'SET-TASKS'
@@ -16,7 +17,7 @@ type RemoveTaskActionType = {
 }
 type AddTaskActionType = {
     type: 'ADD-TASK',
-    task:TaskType
+    task: TaskType
 }
 type ChangeTaskStatusActionType = {
     type: 'CHANGE-TASK-STATUS',
@@ -69,13 +70,6 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
                         : task
                 })
             }
-        // let todolistTasks = state[action.todolistId]
-        // let task = todolistTasks.find(task => task.id === action.taskId)
-        // if (task) {
-        //     task.isDone = action.isDone
-        // }
-        // state[action.todolistId] = [...todolistTasks]
-        // return ({...state})
         case 'CHANGE-TASK-TITLE':
             return {
                 ...state,
@@ -148,4 +142,27 @@ export const changeTaskTitleAC = (taskId: string, title: string, todolistId: str
 }
 export const changeTaskStatusAC = (taskId: string, isDone: boolean, todolistId: string): ChangeTaskStatusActionType => {
     return {type: 'CHANGE-TASK-STATUS', taskId: taskId, isDone: isDone, todolistId: todolistId}
+}
+export const updateTaskStatusTC = (taskId: string, isDone: boolean, todolistId: string) => {
+    return (dispatch: Dispatch, getState: () => AppRootStateType) => {
+        const allTasksFromState = getState().tasks;
+        const tasksForCurrentTodolist = allTasksFromState[todolistId]
+        // console.log(tasksForCurrentTodolist[0]['id'])
+        // @ts-ignore
+        const task = tasksForCurrentTodolist.find(t => t.id === taskId)
+        if (task) {
+            taskAPI.updateTask(todolistId, taskId, {
+                title: task.title,
+                startDate: task.startDate,
+                priority: task.priority,
+                description: task.description,
+                deadline: task.deadline,
+                status: isDone
+            }).then(() => {
+                console.log('res ok')
+                const action = changeTaskStatusAC(taskId, isDone, todolistId)
+                dispatch(action)
+            })
+        }
+    }
 }
