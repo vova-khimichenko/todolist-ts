@@ -145,11 +145,8 @@ export const changeTaskStatusAC = (taskId: string, isDone: boolean, todolistId: 
 }
 export const updateTaskStatusTC = (taskId: string, isDone: boolean, todolistId: string) => {
     return (dispatch: Dispatch, getState: () => AppRootStateType) => {
-        const allTasksFromState = getState().tasks;
-        const tasksForCurrentTodolist = allTasksFromState[todolistId]
-        // console.log(tasksForCurrentTodolist[0]['id'])
         // @ts-ignore
-        const task = tasksForCurrentTodolist.find(t => t.id === taskId)
+        const task = getState().tasks[todolistId].find(t => t.id === taskId)
         if (task) {
             taskAPI.updateTask(todolistId, taskId, {
                 title: task.title,
@@ -158,10 +155,9 @@ export const updateTaskStatusTC = (taskId: string, isDone: boolean, todolistId: 
                 description: task.description,
                 deadline: task.deadline,
                 status: isDone
-            }).then(() => {
-                console.log('res ok')
-                const action = changeTaskStatusAC(taskId, isDone, todolistId)
-                dispatch(action)
+            }).then((res) => {
+                // let isDone = res.data.data.item.status === 1
+                dispatch(changeTaskStatusAC(taskId, isDone, todolistId)) //значения брать из ответа | f
             })
         }
     }
