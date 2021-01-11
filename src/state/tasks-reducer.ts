@@ -4,6 +4,7 @@ import {TaskType} from "../stories/tasks-api.stories";
 import {Dispatch} from "redux";
 import {taskAPI} from "../api/task-api";
 import {AppRootStateType} from "./store";
+import {log} from "util";
 
 export type SetTasksActionType = {
     type: 'SET-TASKS'
@@ -139,6 +140,25 @@ export const removeTaskTC = (todolistId: string, taskId: string) => {
 }
 export const changeTaskTitleAC = (taskId: string, title: string, todolistId: string): ChangeTaskTitleActionType => {
     return {type: 'CHANGE-TASK-TITLE', taskId: taskId, title: title, todolistId: todolistId}
+}
+export const changeTaskTitleTC = (taskId: string, title: string, todolistId: string) => {
+    return (dispatch: Dispatch, getState: () => AppRootStateType) => {
+        // @ts-ignore
+        const task = getState().tasks[todolistId].find(t => t.id === taskId)
+        if (task) {
+            taskAPI.updateTask(todolistId, taskId, {
+                title: title,
+                startDate: task.startDate,
+                priority: task.priority,
+                description: task.description,
+                deadline: task.deadline,
+                status: task.isDone
+            }).then((res) => {
+                console.log(res.data.data.item.title)
+                dispatch(changeTaskTitleAC(taskId, title, todolistId))
+            })
+        }
+    }
 }
 export const changeTaskStatusAC = (taskId: string, isDone: boolean, todolistId: string): ChangeTaskStatusActionType => {
     return {type: 'CHANGE-TASK-STATUS', taskId: taskId, isDone: isDone, todolistId: todolistId}

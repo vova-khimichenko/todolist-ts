@@ -5,14 +5,13 @@ import {EditedSpan} from "./EditedSpan";
 import {Button, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
 import {Task} from "./Task";
-import {fetchTodolistsThunkTC} from "../state/todolists-reducer";
 import {fetchTasksTC} from "../state/tasks-reducer";
 import {useDispatch} from "react-redux";
 
 export type TaskType = {
     id: string
     title: string
-    isDone: boolean
+    isDone: undefined | boolean
 }
 
 export type PropsType = {
@@ -30,7 +29,7 @@ export type PropsType = {
 }
 
 export const Todolist = React.memo(function (props: PropsType) {
-        // console.log("Todolist called")
+        console.log("Todolist called")
         const dispatch = useDispatch()
         useEffect(() => {
             dispatch(fetchTasksTC(props.id))

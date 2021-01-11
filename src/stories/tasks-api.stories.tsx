@@ -8,7 +8,7 @@ export type TaskType = {
     description: string
     todoListId: string
     order: number
-    status: number
+    status: undefined | boolean
     priority: number
     startDate: string
     deadline: string
