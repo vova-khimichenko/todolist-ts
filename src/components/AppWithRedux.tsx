@@ -5,10 +5,9 @@ import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {MenuOpen} from "@material-ui/icons";
 import {
-    AddTodolistAC,
-    ChangeTodolistFilterAC,
-    ChangeTodolistTitleAC, fetchTodolistsThunkTC,
-    RemoveTodolistAC
+    addTodolistAC,
+    changeTodolistFilterAC,
+    changeTodolistTitleAC, fetchTodolistsTC, removeTodolistsTC,
 } from "../state/todolists-reducer";
 import {
     addTaskTC,
@@ -37,22 +36,22 @@ function AppWithRedux() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(fetchTodolistsThunkTC())
+        dispatch(fetchTodolistsTC())
     }, [dispatch])
 
     const addTodolist = useCallback((title: string) => {
-        const action = AddTodolistAC(title)
+        const action = addTodolistAC(title)
         dispatch(action)
     }, [dispatch])
     const removeTodolist = useCallback((todolistId: string) => {
-        dispatch(RemoveTodolistAC(todolistId))
+        dispatch(removeTodolistsTC(todolistId))
     }, [dispatch])
     const changeTodolistTitle = useCallback((title: string, todolistId: string) => {
-        const action = ChangeTodolistTitleAC(title, todolistId)
+        const action = changeTodolistTitleAC(title, todolistId)
         dispatch(action)
     }, [dispatch])
     const changeFilter = useCallback((value: FilterValuesType, todolistId: string) => {
-        const action = ChangeTodolistFilterAC(value, todolistId)
+        const action = changeTodolistFilterAC(value, todolistId)
         dispatch(action)
     }, [dispatch])
 
