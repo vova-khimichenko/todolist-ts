@@ -99,6 +99,12 @@ export const addTodolistTC = (title: string) => (dispatch: Dispatch) => {
 export const changeTodolistTitleAC = (title: string, todolistId: string): ChangeTodolistTitleActionType => {
     return {type: 'CHANGE-TODOLIST-TITLE', title: title, id: todolistId}
 }
+export const changeTodolistTitleTC = (title: string, todolistId: string) => (dispatch: Dispatch) => {
+    todolistAPI.updateTodolist(todolistId, title)
+        .then(() => {
+            dispatch(changeTodolistTitleAC(title, todolistId))
+        })
+}
 export const changeTodolistFilterAC = (filter: FilterValuesType, todolistId: string): ChangeTodolistFilterActionType => {
     return {type: 'CHANGE-TODOLIST-FILTER', id: todolistId, filter: filter}
 }
