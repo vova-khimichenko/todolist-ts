@@ -81,7 +81,7 @@ export const fetchTodolistsTC = () => (dispatch: Dispatch) => {
 export const removeTodolistAC = (todolistId: string): RemoveTodolistActionType => {
     return {type: 'REMOVE-TODOLIST', todolistId: todolistId}
 }
-export const removeTodolistsTC = (todolistId: string) => (dispatch: Dispatch) => {
+export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch) => {
     todolistAPI.deleteTodolist(todolistId)
         .then(() => {
             dispatch(removeTodolistAC(todolistId))
@@ -89,6 +89,12 @@ export const removeTodolistsTC = (todolistId: string) => (dispatch: Dispatch) =>
 }
 export const addTodolistAC = (title: string): AddTodolistActionType => {
     return {type: 'ADD-TODOLIST', title: title, todolistId: v1()}
+}
+export const addTodolistTC = (title: string) => (dispatch: Dispatch) => {
+    todolistAPI.postTodolist(title)
+        .then(() => {
+            dispatch(addTodolistAC(title))
+        })
 }
 export const changeTodolistTitleAC = (title: string, todolistId: string): ChangeTodolistTitleActionType => {
     return {type: 'CHANGE-TODOLIST-TITLE', title: title, id: todolistId}
