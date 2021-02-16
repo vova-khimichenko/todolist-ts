@@ -25,7 +25,7 @@ export const EditedSpan = React.memo(function (props: EditedSpanPropsType) {
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setError(null)
         setTitle(event.currentTarget.value)
-        props.changeTitle(event.currentTarget.value)
+        props.changeTitle(title)
     }
     const onKeyPressHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
         event.key === 'Enter' && activateViewMode()
@@ -33,7 +33,7 @@ export const EditedSpan = React.memo(function (props: EditedSpanPropsType) {
     return editMode
         ? <TextField
             variant={'standard'}
-            value={props.value}
+            value={title}
             autoFocus onBlur={activateViewMode}
             onKeyPress={onKeyPressHandler}
             onChange={onChangeHandler}
