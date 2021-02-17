@@ -1,6 +1,5 @@
 {
-  "name": "todolist-ts",
-  "homepage": "https://vovkahimik.github.io/todolist-ts",
+  "name": "todolist-ts-offline",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

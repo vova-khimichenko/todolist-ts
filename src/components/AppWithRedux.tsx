@@ -74,11 +74,11 @@ function AppWithRedux() {
         <div className="App">
             <AppBar position="static">
                 <Toolbar>
-                    {/*<IconButton edge="start"*/}
-                    {/*    // className={classes.menuButton}*/}
-                    {/*            color="inherit" aria-label="menu">*/}
-                    {/*    <MenuOpen/>*/}
-                    {/*</IconButton>*/}
+                {/*    <IconButton edge="start"*/}
+                {/*        className={classes.menuButton}*/}
+                {/*                color="inherit" aria-label="menu">*/}
+                {/*        <MenuOpen/>*/}
+                {/*    </IconButton>*/}
                     <Typography variant="h6"
                         // className={classes.title}
                     >
