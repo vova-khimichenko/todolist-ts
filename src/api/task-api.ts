@@ -4,7 +4,7 @@ const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/todo-lists/',
     withCredentials: true,
     headers: {
-        'API-KEY': '4e8292c6-4c6d-4090-bee7-d25c2ec782dd'
+        'API-KEY': '7c70269b-11f9-45b8-9ef9-b43fcec6fcf1'
     }
 })
 

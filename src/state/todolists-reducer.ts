@@ -1,7 +1,8 @@
-import {FilterValuesType, TodolistType} from "../components/App";
+import {FilterValuesType} from "../components/App";
 import {v1} from "uuid";
-import {todolistAPI} from "../api/todolist-api";
+import {todolistAPI, TodolistType} from "../api/todolist-api";
 import {Dispatch} from "redux";
+import {ActionsType, setAppStatusAC} from "../components/app-reducer";
 
 export type RemoveTodolistActionType = {
     type: 'REMOVE-TODOLIST',
@@ -29,7 +30,7 @@ type ChangeTodolistFilterActionType = {
 }
 type ActionType = SetTodolistsActionType | RemoveTodolistActionType
     | AddTodolistActionType | ChangeTodolistTitleActionType
-    | ChangeTodolistFilterActionType
+    | ChangeTodolistFilterActionType|ActionsType
 
 const initialState: Array<TodolistType> = []
 
@@ -71,11 +72,12 @@ export const todolistsReducer = (state: Array<TodolistType> = initialState, acti
 export const setTodolistsAC = (todolists: Array<TodolistType>): SetTodolistsActionType => {
     return {type: 'SET-TODOLISTS', todolists}
 }
-export const fetchTodolistsTC = () => (dispatch: Dispatch) => {
+export const fetchTodolistsTC = () => (dispatch: Dispatch<ActionType>) => {
+    dispatch(setAppStatusAC('loading'))
     todolistAPI.getTodolists()
         .then((res) => {
-            // @ts-ignore
             dispatch(setTodolistsAC(res.data))
+            dispatch(setAppStatusAC('succeeded'))
         })
 }
 export const removeTodolistAC = (todolistId: string): RemoveTodolistActionType => {

@@ -2,7 +2,17 @@ import React, {useCallback, useEffect} from 'react';
 import '../App.css';
 import {TaskType, Todolist} from "./Todolist";
 import {AddItemForm} from "./AddItemForm";
-import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
+import {
+    AppBar,
+    Button,
+    Container,
+    Grid,
+    IconButton,
+    LinearProgress,
+    Paper,
+    Toolbar,
+    Typography
+} from "@material-ui/core";
 import {MenuOpen} from "@material-ui/icons";
 import {
     addTodolistTC,
@@ -16,6 +26,8 @@ import {
 } from "../state/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
+import {RequestStatusType} from "./app-reducer";
+
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
 export type TodolistType = {
@@ -27,12 +39,13 @@ export type TaskStateType = {
     [key: string]: Array<TaskType>
 }
 
-function AppWithRedux() {
 
+function AppWithRedux() {
     const todolists = useSelector<AppRootStateType,
         Array<TodolistType>>(state => state.todolists)
     const tasks = useSelector<AppRootStateType,
         TaskStateType>(state => state.tasks)
+    const status = useSelector<AppRootStateType>(state => state.app.status)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -74,11 +87,11 @@ function AppWithRedux() {
         <div className="App">
             <AppBar position="static">
                 <Toolbar>
-                {/*    <IconButton edge="start"*/}
-                {/*        className={classes.menuButton}*/}
-                {/*                color="inherit" aria-label="menu">*/}
-                {/*        <MenuOpen/>*/}
-                {/*    </IconButton>*/}
+                    {/*    <IconButton edge="start"*/}
+                    {/*        className={classes.menuButton}*/}
+                    {/*                color="inherit" aria-label="menu">*/}
+                    {/*        <MenuOpen/>*/}
+                    {/*    </IconButton>*/}
                     <Typography variant="h6"
                         // className={classes.title}
                     >
@@ -86,6 +99,9 @@ function AppWithRedux() {
                     </Typography>
                     {/*<Button color="inherit">Login</Button>*/}
                 </Toolbar>
+                {
+                    status === 'loading' && <LinearProgress color="secondary"/>
+                }
             </AppBar>
             <Container fixed>
                 <Grid container style={{padding: '10px'}}>

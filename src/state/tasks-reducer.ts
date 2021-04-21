@@ -4,7 +4,6 @@ import {TaskType} from "../stories/tasks-api.stories";
 import {Dispatch} from "redux";
 import {taskAPI} from "../api/task-api";
 import {AppRootStateType} from "./store";
-import {log} from "util";
 
 export type SetTasksActionType = {
     type: 'SET-TASKS'

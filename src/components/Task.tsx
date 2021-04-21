@@ -14,7 +14,7 @@ type TaskPropsType = {
 }
 
 export const Task = React.memo((props: TaskPropsType) => {
-    console.log("Task called" + ", " + "propsIsDone: " + props.isDone)
+    // console.log("Task called" + ", " + "propsIsDone: " + props.isDone)
     const onClickHandler = useCallback(() => {
         props.removeTask(props.taskId, props.todolistId)
     }, [props.removeTask, props.taskId, props.todolistId])

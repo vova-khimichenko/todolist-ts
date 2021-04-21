@@ -7,7 +7,7 @@ type EditedSpanPropsType = {
 }
 
 export const EditedSpan = React.memo(function (props: EditedSpanPropsType) {
-    console.log('EditedSpan called')
+    // console.log('EditedSpan called')
     let [editMode, setEditMode] = useState(false)
     let [title, setTitle] = useState(props.value)
     let [error, setError] = useState<string | null>(null)
