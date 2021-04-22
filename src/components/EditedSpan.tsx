@@ -1,16 +1,19 @@
 import React, {ChangeEvent, useState} from "react";
 import {TextField} from "@material-ui/core";
 
+
 type EditedSpanPropsType = {
     value: string
     changeTitle: (title: string) => void
 }
+
 
 export const EditedSpan = React.memo(function (props: EditedSpanPropsType) {
     // console.log('EditedSpan called')
     let [editMode, setEditMode] = useState(false)
     let [title, setTitle] = useState(props.value)
     let [error, setError] = useState<string | null>(null)
+
     const activateEditMode = () => {
         setEditMode(true)
         setTitle(props.value)
@@ -25,11 +28,12 @@ export const EditedSpan = React.memo(function (props: EditedSpanPropsType) {
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setError(null)
         setTitle(event.currentTarget.value)
-        props.changeTitle(title)
+        props.changeTitle(event.currentTarget.value)
     }
     const onKeyPressHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
         event.key === 'Enter' && activateViewMode()
     }
+
     return editMode
         ? <TextField
             variant={'standard'}

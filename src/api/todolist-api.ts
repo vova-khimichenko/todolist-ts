@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export type TodolistType = {
+export type Todolist = {
     id: string
     addedDate: string
     order: number
@@ -28,7 +28,7 @@ export const todolistAPI = {
         return instance.post('', {title: title})
     },
     getTodolists() {
-        return instance.get<Array<TodolistType>>('')
+        return instance.get<Array<Todolist>>('')
     },
 
 }

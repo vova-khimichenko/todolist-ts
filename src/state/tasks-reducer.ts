@@ -1,44 +1,55 @@
-import {TaskStateType} from '../components/App';
-import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from "./todolists-reducer";
-import {TaskType} from "../stories/tasks-api.stories";
-import {Dispatch} from "redux";
+import {TaskState} from '../components/App';
+import {AddTodolist, RemoveTodolist, SetTodolists} from "./todolists-reducer";
+import {Task} from "../stories/tasks-api.stories";
 import {taskAPI} from "../api/task-api";
-import {AppRootStateType} from "./store";
+import {ThunkAction} from "redux-thunk";
+import {AnyAction} from "redux";
+import {AppAction, setAppStatusAC} from "../components/app-reducer";
+import {RootState} from "./store";
 
-export type SetTasksActionType = {
+
+type SetTasks = {
     type: 'SET-TASKS'
-    tasks: Array<TaskType>
+    tasks: Array<Task>
     todolistId: string
 }
-type RemoveTaskActionType = {
+type RemoveTask = {
     type: 'REMOVE-TASK',
     taskId: string
     todolistId: string
 }
-type AddTaskActionType = {
+type AddTask = {
     type: 'ADD-TASK',
-    task: TaskType
+    task: Task
 }
-type ChangeTaskStatusActionType = {
+type ChangeTaskStatus = {
     type: 'CHANGE-TASK-STATUS',
     taskId: string
     isDone: boolean
     todolistId: string
 }
-type ChangeTaskTitleActionType = {
+type ChangeTaskTitle = {
     type: 'CHANGE-TASK-TITLE',
     taskId: string
     title: string
     todolistId: string
 }
-type ActionType =
-    SetTasksActionType | SetTodolistsActionType | RemoveTaskActionType
-    | AddTaskActionType | ChangeTaskStatusActionType | ChangeTaskTitleActionType
-    | AddTodolistActionType | RemoveTodolistActionType
+type TaskAction =
+    SetTasks
+    | SetTodolists
+    | RemoveTask
+    | AddTask
+    | ChangeTaskStatus
+    | ChangeTaskTitle
+    | AddTodolist
+    | RemoveTodolist
+    | AppAction
+export type Thunk<A extends AnyAction> = ThunkAction<void, RootState, unknown, A>
 
-const initialState: TaskStateType = {}
 
-export const tasksReducer = (state: TaskStateType = initialState, action: ActionType) => {
+const initialState = {}
+
+export const tasksReducer = (state: TaskState = initialState, action: TaskAction):TaskState => {
     switch (action.type) {
         case 'SET-TASKS': {
             const stateCopy = {...state}
@@ -99,53 +110,45 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
     }
 }
 
-export const setTasksAC = (tasks: Array<TaskType>, todolistId: string): SetTasksActionType => {
+export const setTasksAC = (tasks: Array<Task>, todolistId: string): SetTasks => {
     return {type: 'SET-TASKS', tasks, todolistId}
 }
-export const fetchTasksTC = (todolistId: string) => {
-    return (dispatch: Dispatch) => {
-        taskAPI.getTasks(todolistId, 30, 1)
-            .then((res) => {
-                const tasks = res.data.items
-                const action = setTasksAC(tasks, todolistId)
-                dispatch(action)
-            })
-    }
+export const fetchTasksTC = (todolistId: string): Thunk<TaskAction> => dispatch => {
+    dispatch(setAppStatusAC('loading'))
+    taskAPI.getTasks(todolistId, 30, 1).then(res => {
+        console.log(res)
+        dispatch(setTasksAC(res.data.items, todolistId))
+        dispatch(setAppStatusAC('succeeded'))
+    })
 }
-export const addTaskAC = (task: TaskType): AddTaskActionType => {
+export const addTaskAC = (task: Task): AddTask => {
     return {type: 'ADD-TASK', task}
 }
-export const addTaskTC = (title: string, todolistId: string) => {
-    return (dispatch: Dispatch) => {
-        taskAPI.postTask(todolistId, title)
-            .then((res) => {
-                console.log(res.data.data.item)
-                const task = res.data.data.item
-                const action = addTaskAC(task)
-                dispatch(action)
-            })
-    }
+export const addTaskTC = (title: string, todolistId: string): Thunk<TaskAction> => dispatch => {
+    dispatch(setAppStatusAC('loading'))
+    taskAPI.postTask(todolistId, title).then(res => {
+        dispatch(addTaskAC(res.data.data.item))
+        dispatch(setAppStatusAC('succeeded'))
+    })
 }
-export const removeTaskAC = (taskId: string, todolistId: string): RemoveTaskActionType => {
+export const removeTaskAC = (taskId: string, todolistId: string): RemoveTask => {
     return {type: 'REMOVE-TASK', taskId: taskId, todolistId: todolistId}
 }
-export const removeTaskTC = (todolistId: string, taskId: string) => {
-    return (dispatch: Dispatch) => {
-        taskAPI.deleteTask(todolistId, taskId)
-            .then(() => {
-                const action = removeTaskAC(taskId, todolistId)
-                dispatch(action)
-            })
-    }
+export const removeTaskTC = (todolistId: string, taskId: string): Thunk<TaskAction> => dispatch => {
+    dispatch(setAppStatusAC('loading'))
+    taskAPI.deleteTask(todolistId, taskId).then(() => {
+        dispatch(removeTaskAC(taskId, todolistId))
+        dispatch(setAppStatusAC('succeeded'))
+    })
 }
-export const changeTaskTitleAC = (taskId: string, title: string, todolistId: string): ChangeTaskTitleActionType => {
+export const changeTaskTitleAC = (taskId: string, title: string, todolistId: string): ChangeTaskTitle => {
     return {type: 'CHANGE-TASK-TITLE', taskId: taskId, title: title, todolistId: todolistId}
 }
-export const changeTaskTitleTC = (taskId: string, title: string, todolistId: string) => {
-    return (dispatch: Dispatch, getState: () => AppRootStateType) => {
-        // @ts-ignore
+export const changeTaskTitleTC = (taskId: string, title: string, todolistId: string): Thunk<TaskAction> => {
+    return (dispatch, getState) => {
         const task = getState().tasks[todolistId].find(t => t.id === taskId)
         if (task) {
+            dispatch(setAppStatusAC('loading'))
             taskAPI.updateTask(todolistId, taskId, {
                 title: title,
                 startDate: task.startDate,
@@ -154,20 +157,20 @@ export const changeTaskTitleTC = (taskId: string, title: string, todolistId: str
                 deadline: task.deadline,
                 status: task.isDone
             }).then((res) => {
-                console.log(res.data.data.item.title)
                 dispatch(changeTaskTitleAC(taskId, title, todolistId))
+                dispatch(setAppStatusAC('succeeded'))
             })
         }
     }
 }
-export const changeTaskStatusAC = (taskId: string, isDone: boolean, todolistId: string): ChangeTaskStatusActionType => {
+export const changeTaskStatusAC = (taskId: string, isDone: boolean, todolistId: string): ChangeTaskStatus => {
     return {type: 'CHANGE-TASK-STATUS', taskId: taskId, isDone: isDone, todolistId: todolistId}
 }
-export const updateTaskStatusTC = (taskId: string, isDone: boolean, todolistId: string) => {
-    return (dispatch: Dispatch, getState: () => AppRootStateType) => {
-        // @ts-ignore
+export const updateTaskStatusTC = (taskId: string, isDone: boolean, todolistId: string): Thunk<TaskAction> => {
+    return (dispatch, getState) => {
         const task = getState().tasks[todolistId].find(t => t.id === taskId)
         if (task) {
+            dispatch(setAppStatusAC('loading'))
             taskAPI.updateTask(todolistId, taskId, {
                 title: task.title,
                 startDate: task.startDate,
@@ -176,8 +179,8 @@ export const updateTaskStatusTC = (taskId: string, isDone: boolean, todolistId: 
                 deadline: task.deadline,
                 status: isDone
             }).then((res) => {
-                // let isDone = res.data.data.item.status === 1
-                dispatch(changeTaskStatusAC(taskId, isDone, todolistId)) //значения брать из ответа | f
+                dispatch(changeTaskStatusAC(taskId, isDone, todolistId))
+                dispatch(setAppStatusAC('succeeded'))
             })
         }
     }

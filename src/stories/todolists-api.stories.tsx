@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react'
-import {todolistAPI, TodolistType} from "../api/todolist-api";
+import {todolistAPI, Todolist} from "../api/todolist-api";
 import {AxiosResponse} from "axios";
 
-type ResponseType<D> = {
+type Response<D> = {
     resultCode: number
     messages: Array<string>
     fieldsErrors: Array<any>
@@ -17,7 +17,7 @@ export const GetTodolists = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
         todolistAPI.getTodolists()
-            .then((res: AxiosResponse<Array<TodolistType>>) => {
+            .then((res: AxiosResponse<Array<Todolist>>) => {
                 setState(res.data);
             })
     }, [])
@@ -30,7 +30,7 @@ export const CreateTodolist = () => {
     useEffect(() => {
         const todolistTitle = 'New todolist'
         todolistAPI.postTodolist(todolistTitle)
-            .then((res: AxiosResponse<ResponseType<{ item: TodolistType }>>) => {
+            .then((res: AxiosResponse<Response<{ item: Todolist }>>) => {
                 setState(res.data);
             })
     }, [])
@@ -43,7 +43,7 @@ export const DeleteTodolist = () => {
     useEffect(() => {
         const todolistId = 'e8066f16-7948-44ff-a671-ca4123a3dde4'
         todolistAPI.deleteTodolist(todolistId)
-            .then((res: AxiosResponse<ResponseType<{}>>) => {
+            .then((res: AxiosResponse<Response<{}>>) => {
                 setState(res.data);
             })
     }, [])
@@ -56,7 +56,7 @@ export const UpdateTodolistTitle = () => {
     useEffect(() => {
         const todolistId = '44d34ade-f35d-4f6b-a6d4-afd4b6a7a4b9'
         todolistAPI.updateTodolist(todolistId, 'SOME TITLE')
-            .then((res: AxiosResponse<ResponseType<{}>>) => {
+            .then((res: AxiosResponse<Response<{}>>) => {
                 setState(res.data)
             })
     }, [])

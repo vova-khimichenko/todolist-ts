@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from "react";
-import {FilterValuesType} from "./App";
+import {FilterValues} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditedSpan} from "./EditedSpan";
 import {Button, IconButton} from "@material-ui/core";
@@ -8,32 +8,34 @@ import {Task} from "./Task";
 import {fetchTasksTC} from "../state/tasks-reducer";
 import {useDispatch} from "react-redux";
 
-export type TaskType = {
+export type Task = {
     id: string
     title: string
     isDone: undefined | boolean
 }
 
-export type PropsType = {
+export type Props = {
     id: string
     title: string
     removeTodolist: (id: string) => void
     changeTodolistTitle: (title: string, id: string) => void
-    tasks: Array<TaskType>
+    tasks: Array<Task>
     addTask: (title: string, id: string) => void
     removeTask: (taskId: string, id: string) => void
     changeTaskStatus: (taskId: string, isDone: boolean, id: string) => void
     changeTaskTitle: (taskId: string, title: string, id: string) => void
     filter: string
-    changeFilter: (value: FilterValuesType, id: string) => void
+    changeFilter: (value: FilterValues, id: string) => void
 }
 
-export const Todolist = React.memo(function (props: PropsType) {
+export const Todolist = React.memo(function (props: Props) {
         // console.log("Todolist called")
         const dispatch = useDispatch()
+
         useEffect(() => {
-            dispatch(fetchTasksTC(props.id))
+                dispatch(fetchTasksTC(props.id))
         }, [])
+
         const onAddTask = useCallback((title: string) => {
             props.addTask(title, props.id)
         }, [props.addTask, props.id])
@@ -52,7 +54,7 @@ export const Todolist = React.memo(function (props: PropsType) {
             props.changeFilter('completed', props.id)
         }, [props.changeFilter, props.id])
 
-        let tasksForTodolist: Array<TaskType>
+        let tasksForTodolist: Array<Task>
         props.filter === 'active'
             ? tasksForTodolist = props.tasks.filter(task => !task.isDone)
             : props.filter === 'completed'

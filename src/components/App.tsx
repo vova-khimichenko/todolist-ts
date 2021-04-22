@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import '../App.css';
-import {TaskType, Todolist} from "./Todolist";
+import {Task, Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
 import {
@@ -8,21 +8,21 @@ import {
 } from "@material-ui/core";
 import {MenuOpen} from "@material-ui/icons";
 
-export type FilterValuesType = 'all' | 'active' | 'completed'
-export type TodolistType = {
+export type FilterValues = 'all' | 'active' | 'completed'
+export type Todolist = {
     id: string
     title: string
     filter: string
 }
-export type TaskStateType = {
-    [key: string]: Array<TaskType>
+export type TaskState = {
+    [key: string]: Array<any>
 }
 
 function App() {
 
     let todolist1 = v1()
     let todolist2 = v1()
-    let [todolists, setTodolists] = useState<Array<TodolistType>>([
+    let [todolists, setTodolists] = useState<Array<Todolist>>([
         {
             id: todolist1,
             title: 'What to learn',
@@ -34,7 +34,7 @@ function App() {
             filter: 'all'
         }
     ])
-    let [tasks, setTasks] = useState<TaskStateType>({
+    let [tasks, setTasks] = useState<TaskState>({
         [todolist1]: [
             {id: v1(), title: 'HTML&CSS', isDone: true},
             {id: v1(), title: 'JS', isDone: true},
@@ -72,7 +72,7 @@ function App() {
         }
     }
 
-    function changeFilter(value: FilterValuesType, todolistId: string) {
+    function changeFilter(value: FilterValues, todolistId: string) {
         let todolist = todolists.find(todolist => todolist.id === todolistId)
         if (todolist) {
             todolist.filter = value
