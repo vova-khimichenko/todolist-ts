@@ -116,7 +116,6 @@ export const setTasksAC = (tasks: Array<Task>, todolistId: string): SetTasks => 
 export const fetchTasksTC = (todolistId: string): Thunk<TaskAction> => dispatch => {
     dispatch(setAppStatusAC('loading'))
     taskAPI.getTasks(todolistId, 30, 1).then(res => {
-        console.log(res)
         dispatch(setTasksAC(res.data.items, todolistId))
         dispatch(setAppStatusAC('succeeded'))
     })

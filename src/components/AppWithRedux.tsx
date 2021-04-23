@@ -27,6 +27,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../state/store";
 import {RequestStatus} from "./app-reducer";
+import {ErrorSnackbar} from "./ErrorSnackbar";
 
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
@@ -85,6 +86,7 @@ function AppWithRedux() {
 
     return (
         <div className="App">
+            <ErrorSnackbar/>
             <AppBar position="static">
                 <Toolbar>
                     {/*    <IconButton edge="start"*/}
