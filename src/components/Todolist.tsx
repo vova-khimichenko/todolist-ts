@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from "react";
-import {FilterValues} from "./App";
+import {FilterValues} from "./app/App";
 import {AddItemForm} from "./AddItemForm";
 import {EditedSpan} from "./EditedSpan";
 import {Button, IconButton} from "@material-ui/core";

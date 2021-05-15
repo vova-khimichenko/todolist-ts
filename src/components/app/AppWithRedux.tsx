@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect} from 'react';
-import '../App.css';
-import {Task, Todolist} from "./Todolist";
-import {AddItemForm} from "./AddItemForm";
+import '../../App.css';
+import {Task, Todolist} from "../Todolist";
+import {AddItemForm} from "../AddItemForm";
 import {
     AppBar,
     Button,
@@ -18,16 +18,16 @@ import {
     addTodolistTC,
     changeTodolistFilterAC,
     changeTodolistTitleTC, fetchTodolistsTC, removeTodolistTC,
-} from "../state/todolists-reducer";
+} from "../../state/todolists-reducer";
 import {
     addTaskTC,
     updateTaskStatusTC,
     removeTaskTC, changeTaskTitleTC,
-} from "../state/tasks-reducer";
+} from "../../state/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../state/store";
+import {RootState} from "../../state/store";
 import {RequestStatus} from "./app-reducer";
-import {ErrorSnackbar} from "./ErrorSnackbar";
+import {ErrorSnackbar} from "../ErrorSnackbar";
 
 
 export type FilterValuesType = 'all' | 'active' | 'completed'

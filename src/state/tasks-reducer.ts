@@ -1,10 +1,10 @@
-import {TaskState} from '../components/App';
+import {TaskState} from '../components/app/App';
 import {AddTodolist, RemoveTodolist, SetTodolists} from "./todolists-reducer";
 import {Task} from "../stories/tasks-api.stories";
 import {taskAPI} from "../api/task-api";
 import {ThunkAction} from "redux-thunk";
 import {AnyAction} from "redux";
-import {AppAction, setAppStatusAC} from "../components/app-reducer";
+import {AppAction, setAppErrorAC, setAppStatusAC} from "../components/app/app-reducer";
 import {RootState} from "./store";
 
 
@@ -53,7 +53,6 @@ export const tasksReducer = (state: TaskState = initialState, action: TaskAction
     switch (action.type) {
         case 'SET-TASKS': {
             const stateCopy = {...state}
-            // @ts-ignore
             stateCopy[action.todolistId] = action.tasks
             return stateCopy
         }
@@ -126,8 +125,18 @@ export const addTaskAC = (task: Task): AddTask => {
 export const addTaskTC = (title: string, todolistId: string): Thunk<TaskAction> => dispatch => {
     dispatch(setAppStatusAC('loading'))
     taskAPI.postTask(todolistId, title).then(res => {
-        dispatch(addTaskAC(res.data.data.item))
-        dispatch(setAppStatusAC('succeeded'))
+        if (res.data.resultCode === 0) {
+            const task = res.data.data.item
+            dispatch(addTaskAC(task))
+            dispatch(setAppStatusAC('succeeded'))
+        } else {
+            if (res.data.messages.length) {
+                dispatch(setAppErrorAC(res.data.messages[0]))
+            } else {
+                dispatch(setAppErrorAC('Some error occurred'))
+            }
+            dispatch(setAppStatusAC('failed'))
+        }
     })
 }
 export const removeTaskAC = (taskId: string, todolistId: string): RemoveTask => {

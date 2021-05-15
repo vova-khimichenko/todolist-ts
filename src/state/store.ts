@@ -2,7 +2,7 @@ import {tasksReducer} from './tasks-reducer';
 import {todolistsReducer} from './todolists-reducer';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import thunk from "redux-thunk";
-import {appReducer} from "../components/app-reducer";
+import {appReducer} from "../components/app/app-reducer";
 
 
 export type RootState = ReturnType<typeof rootReducer>

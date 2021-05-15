@@ -1,10 +1,11 @@
-import {FilterValues} from "../components/App";
+import {FilterValues} from "../components/app/App";
 import {v1} from "uuid";
 import {todolistAPI, Todolist} from "../api/todolist-api";
 import {AnyAction, Dispatch} from "redux";
-import {AppAction, setAppStatusAC} from "../components/app-reducer";
+import {AppAction, setAppErrorAC, setAppStatusAC} from "../components/app/app-reducer";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "./store";
+import {addTaskAC} from "./tasks-reducer";
 
 
 export type RemoveTodolist = {
@@ -82,7 +83,6 @@ export const fetchTodolistsTC = (): Thunk<TodolistAction> => (dispatch: Dispatch
             dispatch(setTodolistsAC(res.data))
             dispatch(setAppStatusAC('succeeded'))
         })
-
 }
 export const removeTodolistAC = (todolistId: string): RemoveTodolist => {
     return {type: 'REMOVE-TODOLIST', todolistId: todolistId}
@@ -101,9 +101,19 @@ export const addTodolistAC = (title: string): AddTodolist => {
 export const addTodolistTC = (title: string): Thunk<TodolistAction> => (dispatch: Dispatch<TodolistAction>) => {
     dispatch(setAppStatusAC('loading'))
     todolistAPI.postTodolist(title)
-        .then(() => {
-            dispatch(addTodolistAC(title))
-            dispatch(setAppStatusAC('succeeded'))
+        .then((res) => {
+            if (res.data.resultCode === 0) {
+                const title = res.data.data.item
+                dispatch(addTodolistAC(title))
+                dispatch(setAppStatusAC('succeeded'))
+            } else {
+                if (res.data.messages.length) {
+                    dispatch(setAppErrorAC(res.data.messages[0]))
+                } else {
+                    dispatch(setAppErrorAC('Some error occurred'))
+                }
+                dispatch(setAppStatusAC('failed'))
+            }
         })
 }
 export const changeTodolistTitleAC = (title: string, todolistId: string): ChangeTodolistTitle => {
