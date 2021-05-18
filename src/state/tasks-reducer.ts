@@ -49,7 +49,7 @@ export type Thunk<A extends AnyAction> = ThunkAction<void, RootState, unknown, A
 
 const initialState = {}
 
-export const tasksReducer = (state: TaskState = initialState, action: TaskAction):TaskState => {
+export const tasksReducer = (state: TaskState = initialState, action: TaskAction): TaskState => {
     switch (action.type) {
         case 'SET-TASKS': {
             const stateCopy = {...state}
@@ -115,7 +115,11 @@ export const setTasksAC = (tasks: Array<Task>, todolistId: string): SetTasks => 
 export const fetchTasksTC = (todolistId: string): Thunk<TaskAction> => dispatch => {
     dispatch(setAppStatusAC('loading'))
     taskAPI.getTasks(todolistId, 30, 1).then(res => {
-        dispatch(setTasksAC(res.data.items, todolistId))
+        if (res.data.items.length) {
+            dispatch(setTasksAC(res.data.items, todolistId))
+        } else {
+            dispatch(setAppErrorAC('Do not get tasks'))
+        }
         dispatch(setAppStatusAC('succeeded'))
     })
 }

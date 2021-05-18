@@ -5,7 +5,7 @@ export type Todolist = {
     addedDate: string
     order: number
     title: string
-    filter:string
+    // filter:string
 }
 
 const instance = axios.create({

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import '../../App.css';
-import {Task, Todolist} from "../Todolist";
+import {TodoList} from "../Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "../AddItemForm";
 import {
@@ -154,7 +154,8 @@ function App() {
 
                             return <Grid item>
                                 <Paper style={{padding: '10px'}}>
-                                    <Todolist
+                                    // @ts-ignore
+                                    <TodoList
                                         key={todolist.id}
                                         id={todolist.id}
                                         title={todolist.title}

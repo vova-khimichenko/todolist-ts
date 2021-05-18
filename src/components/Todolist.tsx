@@ -7,6 +7,7 @@ import {Delete} from "@material-ui/icons";
 import {Task} from "./Task";
 import {fetchTasksTC} from "../state/tasks-reducer";
 import {useDispatch} from "react-redux";
+import {RequestStatus} from "./app/app-reducer";
 
 export type Task = {
     id: string
@@ -17,7 +18,7 @@ export type Task = {
 export type Props = {
     id: string
     title: string
-    removeTodolist: (id: string) => void
+    removeTodolist: (edentityStatus: RequestStatus, id: string) => void
     changeTodolistTitle: (title: string, id: string) => void
     tasks: Array<Task>
     addTask: (title: string, id: string) => void
@@ -26,20 +27,21 @@ export type Props = {
     changeTaskTitle: (taskId: string, title: string, id: string) => void
     filter: string
     changeFilter: (value: FilterValues, id: string) => void
+    entityStatus: RequestStatus
 }
 
-export const Todolist = React.memo(function (props: Props) {
+export const TodoList = React.memo(function (props: Props) {
         // console.log("Todolist called")
         const dispatch = useDispatch()
 
         useEffect(() => {
-                dispatch(fetchTasksTC(props.id))
+            dispatch(fetchTasksTC(props.id))
         }, [])
 
         const onAddTask = useCallback((title: string) => {
             props.addTask(title, props.id)
         }, [props.addTask, props.id])
-        const onRemoveTodolist = () => props.removeTodolist(props.id)
+        const onRemoveTodolist = () => props.removeTodolist(props.entityStatus, props.id)
         const onChangeTodolistTitle = useCallback((title: string) => {
             props.changeTodolistTitle(title, props.id)
         }, [props.changeTodolistTitle, props.id])
@@ -67,7 +69,8 @@ export const Todolist = React.memo(function (props: Props) {
                         <EditedSpan value={props.title}
                                     changeTitle={onChangeTodolistTitle}
                         />
-                        <IconButton onClick={onRemoveTodolist}>
+                        <IconButton onClick={onRemoveTodolist}
+                                    disabled={props.entityStatus === 'loading'}>
                             <Delete/>
                         </IconButton>
                     </h3>
